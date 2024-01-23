@@ -66,6 +66,5 @@ pub fn create_search_window(
         }
         window.push(row);
     }
-
     window
 }
