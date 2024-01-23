@@ -1,60 +1,26 @@
+mod search;
 mod util;
-use image::RgbImage;
+use image::{ImageBuffer, Rgb, RgbImage};
 
 fn main() {
     let image = util::load_image("../images/example_1/main.jpg")
         .expect("Error occured while loading main image!");
 
     let mut parts: Vec<RgbImage> = Vec::new();
-    util::load_parts(&mut parts);
+    util::load_parts(&mut parts, "../images/example_1/parts_1/");
 
     let image_pix: Vec<Vec<(u8, u8, u8)>> = util::image_to_pixel_matrix(&image);
-    util::print_pixel_matrix_portion(&image_pix, 4);
+    //util::print_pixel_matrix_portion(&image_pix, 4);
 
-    let part_pix = util::image_to_pixel_matrix(&parts[0]);
+    let mut output: ImageBuffer<Rgb<u8>, Vec<u8>> = ImageBuffer::new(image.width(), image.height());
+    for part in parts.iter() {
+        let part_pix = util::image_to_pixel_matrix(&part);
+        let (best_x, best_y) = search::find_best_position(&image_pix, &part_pix);
 
-    // let parth = part_pix.len();
-    // let partw = part_pix[0].len();
-
-    // let mainh = image_pix.len();
-    // let mainw = image_pix[0].len();
-
-    let parth = 5;
-    let partw = 2;
-
-    let mainh = 4;
-    let mainw = 4;
-
-    let mut window_move_count = 0;
-
-    for y in (0..mainh).step_by(parth) {
-        for x in (0..mainw).step_by(partw) {
-            if y + parth <= mainh && x + partw <= mainw {
-                let window = create_window(&image_pix, x, y, partw, parth);
-                window_move_count += 1;
-            }
-        }
+        util::generate_output(&mut output, &part, (best_x as u32, best_y as u32));
     }
 
-    println!("The window has moved {} times.", window_move_count);
-}
-
-fn create_window(
-    main_matrix: &Vec<Vec<(u8, u8, u8)>>,
-    start_x: usize,
-    start_y: usize,
-    width: usize,
-    height: usize,
-) -> Vec<Vec<(u8, u8, u8)>> {
-    let mut window = Vec::with_capacity(height);
-
-    for y in start_y..start_y + height {
-        let mut row = Vec::with_capacity(width);
-        for x in start_x..start_x + width {
-            row.push(main_matrix[y][x]);
-        }
-        window.push(row);
-    }
-
-    window
+    output
+        .save("../results/output.png")
+        .expect("Failed to save assembled image");
 }
