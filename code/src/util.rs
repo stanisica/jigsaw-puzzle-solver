@@ -6,23 +6,34 @@ pub fn load_image(path: &str) -> Result<RgbImage, ImageError> {
     Ok(img.to_rgb8())
 }
 
-pub fn load_parts_1(parts: &mut Vec<RgbImage>, path: &str) {
+// EXAMPLE 1
+pub fn load_parts_1_1(parts: &mut Vec<RgbImage>, path: &str) {
     for i in 1..13 {
         let path = format!("{}part_{}.jpg", path, i);
-        println!("{}", path);
         let error = format!("Error occurred while loading part_{}.jpg", i);
         let part = load_image(&path).expect(&error);
         parts.push(part);
     }
 }
 
-pub fn load_parts_2(parts: &mut Vec<RgbImage>, path: &str) {
+pub fn load_parts_1_2(parts: &mut Vec<RgbImage>, path: &str) {
     for i in 1..=12 {
         for j in 1..=29 {
             let path = format!("{}image{}x{}.png", path, i, j);
             let part = load_image(&path).expect("ERROR");
             parts.push(part);
         }
+    }
+}
+
+// EXAMPLE 2
+
+pub fn load_parts_2_1(parts: &mut Vec<RgbImage>, path: &str) {
+    for i in 1..16 {
+        let path = format!("{}part_{}.png", path, i);
+        let error = format!("Error occurred while loading part_{}.png", i);
+        let part = load_image(&path).expect(&error);
+        parts.push(part);
     }
 }
 
