@@ -5,23 +5,22 @@ use rayon::prelude::*;
 use std::time::Instant;
 
 fn main() {
-    let image_path = "../images/example_9/main.png";
-    let parts_path = "../images/example_9/parts_1/";
+    let image_path = "../images/example_7/main.png";
+    let parts_path = "../images/example_7/parts_1/";
     let parts_extension = "png";
-    let output_name = "example_9";
+    let output_name = "example_7";
     let mut parts: Vec<RgbImage> = Vec::new();
 
     let start = Instant::now();
     let image = util::load_image(image_path).expect("Error occured while loading main image!");
     let parts_num = util::count_parts(parts_path);
-    //util::load_parts(&mut parts, parts_path, parts_num, parts_extension);
-    util::load_parts_parallel(&mut parts, parts_path, parts_num, parts_extension);
+    util::load_parts(&mut parts, parts_path, parts_num, parts_extension);
+    //util::load_parts_parallel(&mut parts, parts_path, parts_num, parts_extension);
 
     let image_pix: Vec<Vec<(u8, u8, u8)>> = util::image_to_pixel_matrix(&image);
     let mut output: ImageBuffer<Rgb<u8>, Vec<u8>> = ImageBuffer::new(image.width(), image.height());
 
     // Sequential
-
     // for part in parts.iter() {
     //     let part_pix = util::image_to_pixel_matrix(&part);
     //     let (best_x, best_y) = search::find_best_position(&image_pix, &part_pix);
@@ -30,7 +29,6 @@ fn main() {
     // }
 
     // Parallel
-
     let results: Vec<_> = parts
         .par_iter()
         .map(|part| {

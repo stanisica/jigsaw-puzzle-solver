@@ -18,23 +18,23 @@ pub fn load_parts(parts: &mut Vec<RgbImage>, path: &str, num_parts: usize, exten
     }
 }
 
-pub fn load_parts_parallel(
-    parts: &mut Vec<RgbImage>,
-    path: &str,
-    num_parts: usize,
-    extension: &str,
-) {
-    let loaded_parts: Vec<_> = (0..num_parts)
-        .into_par_iter()
-        .filter_map(|i| {
-            let path = format!("{}image{}.{}", path, i, extension);
-            let error = format!("Error occurred while loading image{}.{}!", i, extension);
+// pub fn load_parts_parallel(
+//     parts: &mut Vec<RgbImage>,
+//     path: &str,
+//     num_parts: usize,
+//     extension: &str,
+// ) {
+//     let loaded_parts: Vec<_> = (0..num_parts)
+//         .into_par_iter()
+//         .filter_map(|i| {
+//             let path = format!("{}image{}.{}", path, i, extension);
+//             let error = format!("Error occurred while loading image{}.{}!", i, extension);
 
-            load_image(&path).map_err(|_| eprintln!("{}", error)).ok()
-        })
-        .collect();
-    parts.extend(loaded_parts);
-}
+//             load_image(&path).map_err(|_| eprintln!("{}", error)).ok()
+//         })
+//         .collect();
+//     parts.extend(loaded_parts);
+// }
 
 pub fn count_parts(path: &str) -> usize {
     let dir = Path::new(path);
