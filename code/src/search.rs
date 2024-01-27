@@ -23,27 +23,6 @@ pub fn find_best_position(
     (best_position.0, best_position.1)
 }
 
-// fn calculate_match_score(
-//     main_matrix: &Vec<Vec<(u8, u8, u8)>>,
-//     part: &Vec<Vec<(u8, u8, u8)>>,
-//     start_x: usize,
-//     start_y: usize,
-// ) -> f32 {
-//     let height = part.len();
-//     let width = part[0].len();
-//     let mut total_score = 0.0;
-
-//     for y in 0..height {
-//         for x in 0..width {
-//             let main_pixel = main_matrix[start_y + y][start_x + x];
-//             let part_pixel = part[y][x];
-//             total_score += euclidean_distance(main_pixel, part_pixel);
-//         }
-//     }
-
-//     total_score
-// }
-
 fn calculate_match_score(
     main_matrix: &Vec<Vec<(u8, u8, u8)>>,
     part: &Vec<Vec<(u8, u8, u8)>>,
@@ -54,22 +33,20 @@ fn calculate_match_score(
     let width = part[0].len();
     let mut total_score = 0.0;
 
-    // Top and Bottom row
     for x in 0..width {
-        total_score += euclidean_distance(main_matrix[start_y][start_x + x], part[0][x]); // Top row
+        total_score += euclidean_distance(main_matrix[start_y][start_x + x], part[0][x]);
         total_score += euclidean_distance(
             main_matrix[start_y + height - 1][start_x + x],
             part[height - 1][x],
-        ); // Bottom row
+        );
     }
 
-    // Left and Right column, excluding corners which are already counted
     for y in 1..height - 1 {
-        total_score += euclidean_distance(main_matrix[start_y + y][start_x], part[y][0]); // Left column
+        total_score += euclidean_distance(main_matrix[start_y + y][start_x], part[y][0]);
         total_score += euclidean_distance(
             main_matrix[start_y + y][start_x + width - 1],
             part[y][width - 1],
-        ); // Right column
+        );
     }
 
     total_score

@@ -1,5 +1,6 @@
 extern crate image;
 use image::{open, ImageBuffer, ImageError, Rgb, RgbImage};
+use rayon::prelude::*;
 use std::fs;
 use std::path::Path;
 
@@ -17,18 +18,31 @@ pub fn load_parts(parts: &mut Vec<RgbImage>, path: &str, num_parts: usize, exten
     }
 }
 
-pub fn count_parts(path: &str, extension: &str) -> usize {
+pub fn load_parts_parallel(
+    parts: &mut Vec<RgbImage>,
+    path: &str,
+    num_parts: usize,
+    extension: &str,
+) {
+    let loaded_parts: Vec<_> = (0..num_parts)
+        .into_par_iter()
+        .filter_map(|i| {
+            let path = format!("{}image{}.{}", path, i, extension);
+            let error = format!("Error occurred while loading image{}.{}!", i, extension);
+
+            load_image(&path).map_err(|_| eprintln!("{}", error)).ok()
+        })
+        .collect();
+    parts.extend(loaded_parts);
+}
+
+pub fn count_parts(path: &str) -> usize {
     let dir = Path::new(path);
     let mut count = 0;
 
     if dir.is_dir() {
-        for entry in fs::read_dir(dir).expect("Directory not found!") {
-            let entry = entry.expect("Error reading entry!");
-            let file_path = entry.path();
-
-            if file_path.is_file() && file_path.extension().unwrap_or_default() == extension {
-                count += 1;
-            }
+        for _ in fs::read_dir(dir).expect("Directory not found!") {
+            count += 1;
         }
     } else {
         println!("Provided path is not a directory!");
@@ -44,7 +58,7 @@ pub fn image_to_pixel_matrix(img: &RgbImage) -> Vec<Vec<(u8, u8, u8)>> {
     for y in 0..height {
         let mut row = Vec::with_capacity(width as usize);
         for x in 0..width {
-            let Rgb([r, g, b]) = *img.get_pixel(x, y); //kopira vrednosti piksela u matricu
+            let Rgb([r, g, b]) = *img.get_pixel(x, y);
             row.push((r, g, b));
         }
         matrix.push(row);
