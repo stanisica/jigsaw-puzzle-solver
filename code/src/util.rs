@@ -37,7 +37,7 @@ pub fn load_parts_parallel(
 pub fn execute_parallel_load(parts: &mut Vec<RgbImage>, parts_path: Vec<String>) {
     let loaded_parts: Vec<_> = parts_path
         .par_iter()
-        .map(|path| load_image(path).expect("ERROR loading image parallel!"))
+        .map(|path| load_image(path).expect("Error occurred while loading image parallel!"))
         .collect();
 
     parts.extend(loaded_parts);

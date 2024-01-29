@@ -41,6 +41,7 @@ fn main() {
     for (part, best_x, best_y) in results {
         util::generate_output(&mut output, &part, (best_x as u32, best_y as u32));
     }
+    //
 
     let output_path = format!("../results/{}.png", output_name);
     output
