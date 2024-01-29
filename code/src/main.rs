@@ -5,8 +5,8 @@ use rayon::prelude::*;
 use std::time::Instant;
 
 fn main() {
-    let image_path = "../images/example_7/main.png";
-    let parts_path = "../images/example_7/parts_1/";
+    let image_path = "../examples/example_7/main.png";
+    let parts_path = "../examples/example_7/parts_1/";
     let parts_extension = "png";
     let output_name = "example_7";
     let mut parts: Vec<RgbImage> = Vec::new();
