@@ -26,7 +26,7 @@ pub fn load_parts_parallel(
     extension: &str,
 ) {
     let mut parts_path: Vec<String> = Vec::new();
-    for i in 1..parts_num {
+    for i in 0..parts_num {
         let value = format!("{}image{}.{}", path, i, extension);
         parts_path.push(value);
     }
@@ -88,13 +88,3 @@ pub fn generate_output(
         }
     }
 }
-
-// Debug function
-// pub fn print_matrix_portion(matrix: &Vec<Vec<(u8, u8, u8)>>, size: usize) {
-//     for row in matrix.iter().take(size) {
-//         for &pixel in row.iter().take(size) {
-//             print!("{:?} ", pixel);
-//         }
-//         println!();
-//     }
-// }
